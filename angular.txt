@@ -81,3 +81,69 @@ You need strong typing and scalability
 You're working with teams and long-term projects
 
 You want out-of-the-box solutions (instead of piecing together libraries like with React)
+===================================================================================
+
+In Angular, data binding is the way of connecting your TypeScript/Component class data with the HTML template.
+There are two major binding types: One-way and Two-way.
+
+🔹 One-Way Data Binding
+
+👉 Data flows in one direction only: from Component (TS class) → View (HTML).
+
+Types of one-way binding in Angular:
+
+Interpolation ({{ }})
+
+<h1>{{ title }}</h1>
+
+
+Displays component property in the view.
+
+Property Binding ([ ])
+
+<img [src]="imageUrl">
+
+
+Binds element/property/attribute to component property.
+
+Event Binding (( ))
+
+<button (click)="onClick()">Click</button>
+
+
+Sends data from View → Component (but not back).
+
+📌 Key point: View updates only when component changes (not vice versa).
+
+🔹 Two-Way Data Binding
+
+👉 Data flows in both directions:
+
+Component → View
+
+View → Component
+
+Example using [(ngModel)]:
+<input [(ngModel)]="username" placeholder="Enter name">
+<p>Hello, {{ username }}</p>
+
+
+If username changes in component → input updates.
+
+If input changes in view → component’s username updates.
+
+⚡ Requires FormsModule (for ngModel) in app.module.ts.
+
+✅ Comparison
+Feature	One-Way Binding	Two-Way Binding
+Direction	Component → View (or View → Component via events)	Component ↔ View
+Syntax	{{}}, [ ], ( )	[( )] (banana in a box)
+Use case	Displaying static data, handling events	Form fields, editable inputs
+Performance	Faster (less checks needed)	Slightly heavier (continuous sync)
+
+👉 In real projects:
+
+Use one-way binding where possible (better performance, clearer flow).
+
+Use two-way binding mostly in forms and input controls.
+-------------------------------------------------------------------------------------------
