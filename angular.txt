@@ -147,3 +147,94 @@ Use one-way binding where possible (better performance, clearer flow).
 
 Use two-way binding mostly in forms and input controls.
 -------------------------------------------------------------------------------------------
+
+
+In Angular, directives are special instructions in the DOM (HTML) that tell Angular to change the behavior or appearance of elements.
+They are one of Angular’s core features.
+
+🔹 Types of Directives in Angular
+1. Component Directives
+
+Technically, every component in Angular is a directive with a template.
+
+Example:
+
+@Component({
+  selector: 'app-hello',
+  template: `<h1>Hello Angular!</h1>`
+})
+export class HelloComponent {}
+
+
+Usage:
+
+<app-hello></app-hello>
+
+2. Structural Directives
+
+👉 These change the DOM structure (add/remove elements).
+They are prefixed with *.
+
+*ngIf → conditionally render elements.
+
+<p *ngIf="isLoggedIn">Welcome, User!</p>
+
+
+*ngFor → loop through a list.
+
+<ul>
+  <li *ngFor="let item of items">{{ item }}</li>
+</ul>
+
+
+*ngSwitch → multiple conditional rendering.
+
+<div [ngSwitch]="role">
+  <p *ngSwitchCase="'admin'">Admin Panel</p>
+  <p *ngSwitchCase="'user'">User Dashboard</p>
+  <p *ngSwitchDefault>Guest</p>
+</div>
+
+3. Attribute Directives
+
+👉 These change the look or behavior of an existing element/component.
+
+Built-in Examples:
+
+ngClass → dynamically set CSS classes.
+
+<p [ngClass]="{ active: isActive }">Text with class</p>
+
+
+ngStyle → dynamically set inline styles.
+
+<p [ngStyle]="{ color: isActive ? 'green' : 'red' }">Styled text</p>
+
+
+Custom Attribute Directive Example:
+
+import { Directive, ElementRef, Renderer2 } from '@angular/core';
+
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective {
+  constructor(el: ElementRef, renderer: Renderer2) {
+    renderer.setStyle(el.nativeElement, 'backgroundColor', 'yellow');
+  }
+}
+
+
+Usage:
+
+<p appHighlight>Highlighted Text</p>
+
+✅ Summary
+Directive Type	Purpose	Example
+Component	Defines a reusable UI block	<app-header></app-header>
+Structural	Adds/removes DOM elements	*ngIf, *ngFor
+Attribute	Changes look/behavior of elements	[ngClass], [ngStyle]
+
+-----------------------------------------------------------------------------------
+
+
