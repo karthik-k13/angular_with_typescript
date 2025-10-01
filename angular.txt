@@ -237,4 +237,67 @@ Attribute	Changes look/behavior of elements	[ngClass], [ngStyle]
 
 -----------------------------------------------------------------------------------
 
+🔹 What is <ng-template>?
+
+It’s an Angular template element that isn’t rendered directly in the DOM until Angular explicitly tells it to.
+
+Angular uses it for structural directives like *ngIf, *ngFor, ngSwitch, etc.
+
+It acts like a placeholder for content that can be shown conditionally or reused.
+
+🔹 Example 1: Basic ng-template with *ngIf
+<h2 *ngIf="isLoggedIn; else guestBlock">
+  Welcome User!
+</h2>
+
+<ng-template #guestBlock>
+  <h2>Please log in</h2>
+</ng-template>
+
+
+👉 Here:
+
+If isLoggedIn is true → "Welcome User!" is displayed.
+
+If false → Angular renders the <ng-template> content (guestBlock).
+
+🔹 Example 2: Multiple else if using ng-template
+<h2 *ngIf="role === 'admin'; else managerBlock">Welcome Admin</h2>
+
+<ng-template #managerBlock>
+  <h2 *ngIf="role === 'manager'; else guestBlock">Welcome Manager</h2>
+</ng-template>
+
+<ng-template #guestBlock>
+  <h2>Welcome Guest</h2>
+</ng-template>
+
+🔹 Example 3: ngTemplateOutlet (Reusing Templates)
+<ng-template #messageTemplate let-name="userName">
+  <p>Hello, {{ name }}!</p>
+</ng-template>
+
+<!-- Reuse the same template -->
+<ng-container *ngTemplateOutlet="messageTemplate; context:{ userName: 'Alice' }"></ng-container>
+<ng-container *ngTemplateOutlet="messageTemplate; context:{ userName: 'Bob' }"></ng-container>
+
+
+👉 Output:
+
+Hello, Alice!
+Hello, Bob!
+
+🔹 Why ng-template?
+
+Before Angular v17’s new @if/@for syntax, it was the only way to handle else conditions and template reuse.
+
+Even now, it’s still useful when:
+
+You want reusable UI blocks.
+
+You want to pass template references into child components.
+
+
+---------------------------------------------------------------------------------------------------------
+
 
