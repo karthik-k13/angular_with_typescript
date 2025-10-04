@@ -1,0 +1,163 @@
+
+<h1>{{title}}</h1>
+<h2>{{subtitle}}</h2>
+<img  [src]="imageUrl" alt="Angular Logo">
+<button disabled={{isDisabled}}>Disable with string interpolation</button>
+<button [disabled]="isDisabled">Disable with property binding</button>
+
+<button [class.active]="isActive" [class.inactive]="!isActive">click me 1</button>
+
+<button [class.apple]="FruitName=='Apple'">FruitNinja</button>
+
+<button [style.background]=" isActive ? 'green' : 'red' "
+[style.color]=" isActive ? 'white' : 'black' "
+>click me 2</button>
+
+<!-- use class binding when multiple styles are embedded and prefer style binding for single style-->
+
+<button [class.active]="isActive" [class.inactive]="!isActive"  ((mouseover))="clickButton()">click me 3</button>
+
+<!-- event binding with event filters -->
+<input type="text" (keyup.enter)="enterKey($event)">
+
+<!-- capturing userinput to a variable -->
+<input type="text" (keyup.enter)="keyfiltering(user)" #user id="userInput" >
+
+<!-- two way binding -->
+<input type="text" [value]="userName"    (keyup.enter)="updateUserName(username)" #username>
+<!-- OR using ngModel directive -->
+<input type="text" [(ngModel)]="userName">
+
+<!-- display userinput using string interpolation  -->
+<h3>{{userName}}</h3>
+
+
+@if (isActive) {
+    <h4>User logged in </h4>
+}
+@else {
+    <h4>User not logged in </h4>}   
+
+
+<!--  <h3 *ngIf="isAdmin; else memberMessage"> Welcome Admin</h3>
+<ng-template #memberMessage>
+     <h3 *ngIf="isMember; else guestMessage">  Welcome Member</h3>   
+</ng-template> 
+<ng-template #guestMessage>
+     <h3> Welcome Guest </h3> 
+</ng-template>   -->
+
+<!-- @if (isAdmin) {
+<h2> Welcome Admin</h2>
+}
+@else if (isMember) {
+<h2> Welcome Member</h2>
+}   
+@else {
+<h2> Welcome Guest </h2>
+} -->
+<!-- 
+<button (click)="countLoginAttempts()" *ngIf="loginCount<3">Login</button>
+<h2 *ngIf="loginCount>=3">Login attempts exceeded</h2> -->
+
+<!-- @if (loginCount < 3) {
+    <button (click)="countLoginAttempts()">Login</button>
+}
+@if (loginCount >= 3) {
+    <h2>login attempts exceeded</h2>
+} -->
+
+<!-- @if(role=='Admin') {
+    <h2> Welcome Admin</h2>
+}   
+@else if(role=='Member') {
+    <h2> Welcome Member</h2>
+    }
+@else {  
+        <h2> Welcome {{role}} </h2>
+    } -->
+
+<ng-template #joinCourse >
+    <button>Join Course</button>
+</ng-template>                         
+
+
+    <div [ngTemplateOutlet]='joinCourse' >course-1</div>
+    <div [ngTemplateOutlet]="joinCourse">course-2</div>
+    <div [ngTemplateOutlet]="joinCourse">course-3</div>         
+    <div [ngTemplateOutlet]="joinCourse">course-4</div>
+    <div [ngTemplateOutlet]="joinCourse">course-5</div>
+
+    <!-- <h3> {{users[0]}} </h3>
+    <h3> {{users[1]}} </h3>
+    <h3> {{users[2]}} </h3>
+    <h3> {{users[3]}} </h3>
+
+    <h2 *ngFor="let user of users">{{user}} </h2> -->
+
+    <!-- @for (user of users; track $index) {
+        <h2>{{$index}}-- {{user}} </h2>                 
+
+    }
+
+    <ul>
+    @for ( user of users; track $index) {
+        <li>{{$index}}-- {{user}} </li>                 
+    }               
+    </ul> -->
+
+    <!-- <div *ngIf="userObj.length==0"><p>No User Found</p></div> -->
+
+<!-- <ul>
+    <li *ngFor="let user of userObj ; let i = index; let userCount= count ">
+         {{user.name}} -- {{user.age}}--{{userCount}} <button (click)="deleteUser(i)">Delete User</button>
+</ul>   
+
+<ul>
+    {{userObj.length}}
+    @for (user of userObj; track user;let i = $index;let userCount= $count;let first= $first; let last= $last; let even= $even; let odd= $odd ) {
+        <li>{{i}}--{{first}}--{{odd}}--{{userCount}}-- {{user.name}} -- {{user.age}} <button (click)="deleteUser(i)">Delete User</button></li>
+    }
+    @empty {
+    <p>No Users Found </p>
+        }
+</ul> -->
+
+
+
+
+<!-- <button (click)="addNewUser()">Add User</button> -->
+
+<!-- <div [ngSwitch]="role">
+    <h2 *ngSwitchCase="'Admin'"> Welcome Admin</h2>
+    <h2 *ngSwitchCase="'Member'"> Welcome Member</h2>
+    <h2 *ngSwitchDefault> Welcome Guest </h2>   
+</div>   -->
+<!-- 
+@switch (role) {
+    @case ('Admin') {
+        <h2> Welcome Admin</h2>
+    }
+    @case ('Member') {
+        <h2> Welcome Member</h2>
+    }   
+    @default {
+        <h2> Welcome Guest </h2>   
+    }           
+
+} -->
+<!-- 
+<h1 [style.color]="isAdmin ? 'green':'red'" [style.textTransform]="isAdmin ? 'uppercase':'lowercase'">Welcome Page</h1>
+
+<h1 [ngStyle]="{'color':isAdmin ? 'green':'red', 'text-transform': isAdmin ? 'uppercase':'lowercase'}">Welcome Page using ngStyle</h1> -->
+
+<!-- <h1 [class.login]="isAdmin" [class.logout]="!isAdmin">class binding </h1>
+
+<h1 [ngClass]="{'login':isAdmin, 'logout':!isAdmin}">ngClass directive</h1>
+ -->
+<h1>{{postTitle}}</h1>
+<app-post-list></app-post-list>
+<p>{{1+2}}{{1+2}}</p>
+<app-navbar></app-navbar>
+<app-header></app-header>
+<router-outlet></router-outlet>
