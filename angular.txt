@@ -357,3 +357,146 @@ Examples	*ngIf, *ngFor, *ngSwitch	ngClass, ngStyle, custom highlight
 Structural = Building blocks of DOM (existence of elements)
 
 Attribute = Decorating existing DOM elements
+------------------------------------------------------------------------------------------
+
+1. Parent → Child Communication
+
+The Parent passes data to the Child using @Input().
+
+Example:
+
+Parent component template (app.component.html):
+
+<app-child [childData]="parentMessage"></app-child>
+
+
+Parent component class (app.component.ts):
+
+parentMessage = "Hello from Parent!";
+
+
+Child component (child.component.ts):
+
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<p>{{ childData }}</p>`
+})
+export class ChildComponent {
+  @Input() childData!: string;
+}
+
+
+✔ Here, the parent passes parentMessage to the child.
+
+2. Child → Parent Communication
+
+The Child sends data back to the Parent using @Output() + EventEmitter.
+
+Example:
+
+Child component (child.component.ts):
+
+import { Component, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<button (click)="sendData()">Send to Parent</button>`
+})
+export class ChildComponent {
+  @Output() childEvent = new EventEmitter<string>();
+
+  sendData() {
+    this.childEvent.emit("Hello Parent! from Child");
+  }
+}
+
+
+Parent template (app.component.html):
+
+<app-child (childEvent)="receiveData($event)"></app-child>
+<p>{{ messageFromChild }}</p>
+
+
+Parent class (app.component.ts):
+
+messageFromChild = "";
+
+receiveData(data: string) {
+  this.messageFromChild = data;
+}
+
+
+✔ The child emits data, and the parent catches it.
+
+3. Sibling → Sibling Communication
+
+Siblings cannot directly communicate (since they are at the same level).
+We use a shared service with RxJS Subject/BehaviorSubject to share data.
+
+Example:
+
+Shared service (data.service.ts):
+
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class DataService {
+  private messageSource = new BehaviorSubject<string>("Default Message");
+  currentMessage = this.messageSource.asObservable();
+
+  changeMessage(message: string) {
+    this.messageSource.next(message);
+  }
+}
+
+
+Sibling 1 (sibling1.component.ts):
+
+import { Component } from '@angular/core';
+import { DataService } from '../data.service';
+
+@Component({
+  selector: 'app-sibling1',
+  template: `<button (click)="newMessage()">Send to Sibling2</button>`
+})
+export class Sibling1Component {
+  constructor(private dataService: DataService) {}
+
+  newMessage() {
+    this.dataService.changeMessage("Hello from Sibling 1!");
+  }
+}
+
+
+Sibling 2 (sibling2.component.ts):
+
+import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
+
+@Component({
+  selector: 'app-sibling2',
+  template: `<p>{{message}}</p>`
+})
+export class Sibling2Component implements OnInit {
+  message!: string;
+
+  constructor(private dataService: DataService) {}
+
+  ngOnInit() {
+    this.dataService.currentMessage.subscribe(msg => this.message = msg);
+  }
+}
+
+
+✔ Now, Sibling1 → Service → Sibling2 communication works.
+
+🔑 Summary
+
+Parent → Child → @Input()
+
+Child → Parent → @Output() + EventEmitter
+
+Sibling → Sibling → Shared service with RxJS
