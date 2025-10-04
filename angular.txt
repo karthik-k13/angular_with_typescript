@@ -300,4 +300,60 @@ You want to pass template references into child components.
 
 ---------------------------------------------------------------------------------------------------------
 
+1. Structural Directives
 
+Definition: They change the structure of the DOM (add, remove, or replace elements).
+
+Identifiable by: They usually start with a * in templates.
+
+Examples:
+
+*ngIf → adds/removes element based on condition
+
+*ngFor → repeats an element for each item in a list
+
+*ngSwitchCase → conditionally displays templates
+
+👉 They manipulate the DOM layout itself.
+
+Example:
+
+<div *ngIf="isLoggedIn">Welcome, User!</div>
+
+
+If isLoggedIn = false, this <div> won’t even exist in the DOM.
+
+2. Attribute Directives
+
+Definition: They change the appearance or behavior of an existing element, component, or directive without altering the DOM structure.
+
+Examples:
+
+ngClass → add/remove CSS classes
+
+ngStyle → apply inline styles dynamically
+
+Custom attribute directives (like [appHighlight])
+
+👉 They modify the look/behavior of an element.
+
+Example:
+
+<p [ngStyle]="{color: isError ? 'red' : 'green'}">
+  Status Message
+</p>
+
+
+Here <p> always exists, only its style changes.
+
+🔑 Key Difference
+Feature	Structural Directive 🏗	Attribute Directive 🎨
+Effect	Alters DOM structure (add/remove elements)	Alters appearance/behavior of element
+Template Syntax	Uses * (e.g., *ngIf)	Uses [] or normal attribute syntax
+Examples	*ngIf, *ngFor, *ngSwitch	ngClass, ngStyle, custom highlight
+
+👉 So, think like this:
+
+Structural = Building blocks of DOM (existence of elements)
+
+Attribute = Decorating existing DOM elements
