@@ -161,3 +161,23 @@
 <app-navbar></app-navbar>
 <app-header></app-header>
 <router-outlet></router-outlet>
+
+
+
+<app-post-list (messageEvent)="recieveMessage($event)"></app-post-list>
+<h2>{{childMessage }}</h2>
+<h1>{{appPostTitle}}</h1>
+<h3>{{childMessage}}</h3>
+<!-- <h2>{{isActive}}from app</h2> -->
+<!-- <app-post-list [postTitle]="appPostTitle" [isLoggedIn]="isActive"></app-post-list> -->
+
+<!-- <app-card>
+    <header header>Card Header</header>
+    <div body>This is the body of the card</div>
+    <footer footer>Card Footer</footer>
+</app-card> -->
+<!-- <div *ngComponentOutlet="loadPostComponent()"></div>> -->
+
+<button (click)="loadPostComponent()">Load Post Component</button>
+<button (click)="removePostComponent()">Remove Post Component</button>
+
