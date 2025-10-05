@@ -500,3 +500,155 @@ Parent → Child → @Input()
 Child → Parent → @Output() + EventEmitter
 
 Sibling → Sibling → Shared service with RxJS
+-------------------------------------------------------------------------------
+
+
+🧩 1️⃣ What are Lifecycle Hooks?
+
+Angular components have a life cycle — from creation to destruction.
+Angular provides hooks (methods) that let you tap into key moments in this cycle.
+
+Each hook gives you a chance to run custom logic when:
+
+The component is created
+
+The data-bound properties change
+
+The component renders
+
+The component updates or destroys
+
+🧠 2️⃣ Full List of Common Lifecycle Hooks (in order)
+Lifecycle Hook	Called When	Typical Use
+ngOnChanges()	Before ngOnInit(), and whenever an @Input() value changes	React to input property changes
+ngOnInit()	Once, after the first ngOnChanges()	Initialization logic (fetch data, set up state)
+ngDoCheck()	During every change detection cycle	Custom change detection logic
+ngAfterContentInit()	After projecting external content via <ng-content>	Access projected content
+ngAfterContentChecked()	After each check of projected content	Respond after Angular checks content
+ngAfterViewInit()	After component’s view (and child views) initialized	Manipulate view or child elements (e.g. @ViewChild)
+ngAfterViewChecked()	After each change detection cycle for the view	Respond after Angular updates the view
+ngOnDestroy()	Just before Angular destroys the component	Cleanup: unsubscribe, detach listeners, etc.
+⚙️ 3️⃣ Example: Lifecycle Hooks in Action
+Child Component: child.component.ts
+import { Component, Input, OnChanges, OnInit, OnDestroy, SimpleChanges } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<p>Child component with value: {{ value }}</p>`
+})
+export class ChildComponent implements OnChanges, OnInit, OnDestroy {
+  @Input() value!: number;
+
+  constructor() {
+    console.log('Constructor: Component instance created');
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('ngOnChanges:', changes);
+  }
+
+  ngOnInit() {
+    console.log('ngOnInit: Component initialized');
+  }
+
+  ngOnDestroy() {
+    console.log('ngOnDestroy: Component destroyed');
+  }
+}
+
+Parent Component: app.component.ts
+@Component({
+  selector: 'app-root',
+  template: `
+    <button (click)="changeValue()">Change Value</button>
+    <button (click)="toggle()">Toggle Child</button>
+    <app-child *ngIf="show" [value]="count"></app-child>
+  `
+})
+export class AppComponent {
+  count = 0;
+  show = true;
+
+  changeValue() {
+    this.count++;
+  }
+
+  toggle() {
+    this.show = !this.show;
+  }
+}
+
+Output in Console:
+Constructor: Component instance created
+ngOnChanges: { value: { currentValue: 0, firstChange: true } }
+ngOnInit: Component initialized
+... (when button clicked)
+ngOnChanges: { value: { previousValue: 0, currentValue: 1 } }
+... (when toggle off)
+ngOnDestroy: Component destroyed
+
+🔄 4️⃣ ngOnChanges() — Deep Dive
+When it Runs:
+
+Whenever an @Input() property changes value (by reference).
+
+Runs before ngOnInit() and also on every input update.
+
+Signature:
+ngOnChanges(changes: SimpleChanges)
+
+Example:
+ngOnChanges(changes: SimpleChanges) {
+  if (changes['user']) {
+    console.log('Previous:', changes['user'].previousValue);
+    console.log('Current:', changes['user'].currentValue);
+  }
+}
+
+🎨 5️⃣ Rendering Programmatically (View Manipulation)
+
+Sometimes you want to manipulate or render DOM elements manually — not via templates.
+
+You can do that after Angular renders the view — typically in:
+
+ngAfterViewInit() for elements inside the component template.
+
+ngAfterContentInit() for projected content.
+
+Example:
+import { Component, ElementRef, ViewChild, AfterViewInit, Renderer2 } from '@angular/core';
+
+@Component({
+  selector: 'app-render-demo',
+  template: `<div #box>Original Text</div>`
+})
+export class RenderDemoComponent implements AfterViewInit {
+  @ViewChild('box') box!: ElementRef;
+
+  constructor(private renderer: Renderer2) {}
+
+  ngAfterViewInit() {
+    this.renderer.setStyle(this.box.nativeElement, 'color', 'blue');
+    this.renderer.setProperty(this.box.nativeElement, 'innerText', 'Text Updated Programmatically');
+  }
+}
+
+
+✅ Use Renderer2 — safe way to manipulate DOM (avoids direct document calls).
+
+⚡ 6️⃣ Typical Order of Hook Calls
+Phase	Hooks
+Creation	constructor → ngOnChanges → ngOnInit → ngAfterContentInit → ngAfterContentChecked → ngAfterViewInit → ngAfterViewChecked
+Change Detection	ngOnChanges → ngDoCheck → ngAfterContentChecked → ngAfterViewChecked
+Destruction	ngOnDestroy
+💡 7️⃣ Quick Tips
+
+Use ngOnChanges → respond to @Input() changes.
+
+Use ngAfterViewInit → DOM / ViewChild access.
+
+Use ngOnDestroy → clean up subscriptions.
+
+Avoid heavy logic in ngDoCheck (it runs often).
+
+Don’t manipulate DOM before ngAfterViewInit.
